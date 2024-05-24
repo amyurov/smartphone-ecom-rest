@@ -1,5 +1,6 @@
 package com.amyurov.smartphoneecom.entity;
 
+import com.amyurov.smartphoneecom.entity.enums.Manufacturer;
 import jakarta.persistence.*;
 import lombok.*;
 
