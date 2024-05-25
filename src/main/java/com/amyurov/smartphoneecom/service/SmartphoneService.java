@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,5 +25,9 @@ public class SmartphoneService {
 
     public Page<SmartphoneReadDto> findAllPaginated(Pageable pageable) {
         return null;
+    }
+
+    public Optional<SmartphoneReadDto> findById(Integer id) {
+        return Optional.empty();
     }
 }
