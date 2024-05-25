@@ -4,4 +4,4 @@ WORKDIR /app
 
 COPY target/smartphone-ecom-app.jar /app/smartphone-ecom-app.jar
 
-ENTRYPOINT ["java", "-jar", "myapp.jar"]
+ENTRYPOINT ["java", "-jar", "smartphone-ecom-app.jar"]
