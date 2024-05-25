@@ -15,6 +15,7 @@ VALUES ('Apple', 'IPhone 13', 'Black', 128, 799.99),
        ('Apple', 'IPhone 12', 'Blue', 64, 699.99),
        ('Apple', 'IPhone 12 Mini', 'Green', 128, 599.99),
        ('Apple', 'IPhone SE', 'Red', 64, 399.99),
+
        ('Xiaomi', 'Mi 11', 'Black', 128, 749.99),
        ('Xiaomi', 'Redmi Note 10', 'Blue', 64, 199.99),
        ('Xiaomi', 'Poco X3', 'Gray', 128, 299.99),
