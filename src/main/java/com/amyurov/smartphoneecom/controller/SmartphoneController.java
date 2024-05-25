@@ -1,5 +1,6 @@
 package com.amyurov.smartphoneecom.controller;
 
+import com.amyurov.smartphoneecom.dto.SmartphoneCreateDto;
 import com.amyurov.smartphoneecom.dto.SmartphoneReadDto;
 import com.amyurov.smartphoneecom.response.ContentResponse;
 import com.amyurov.smartphoneecom.response.PaginatedContentResponse;
@@ -10,12 +11,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -47,5 +47,16 @@ public class SmartphoneController {
 
         return ResponseEntity.ok(new ContentResponse(List.of(readDto)));
     }
+
+    @PostMapping
+    public ResponseEntity<?> create(@RequestBody @Validated SmartphoneCreateDto smartphone) {
+        var smartphoneReadDto = smartphoneService.create(smartphone)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+
+        URI createdUri = URI.create(BASE_URI + smartphoneReadDto.getId());
+        return ResponseEntity.created(createdUri).body(smartphoneReadDto);
+    }
+
+
 
 }
