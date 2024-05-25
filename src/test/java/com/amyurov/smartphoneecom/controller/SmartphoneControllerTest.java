@@ -1,6 +1,7 @@
 package com.amyurov.smartphoneecom.controller;
 
 import com.amyurov.smartphoneecom.dto.SmartphoneCreateDto;
+import com.amyurov.smartphoneecom.dto.SmartphoneEditDto;
 import com.amyurov.smartphoneecom.dto.SmartphoneReadDto;
 import com.amyurov.smartphoneecom.entity.enums.Manufacturer;
 import com.amyurov.smartphoneecom.service.SmartphoneService;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -44,6 +46,7 @@ class SmartphoneControllerTest {
 
     private static SmartphoneReadDto smartphoneReadDto;
     private static SmartphoneCreateDto smartphoneCreateDto;
+    private static SmartphoneEditDto smartphoneEditDto;
 
 
     @BeforeAll()
@@ -52,6 +55,7 @@ class SmartphoneControllerTest {
                 BigDecimal.valueOf(599.99));
         smartphoneCreateDto = new SmartphoneCreateDto(Manufacturer.APPLE, "Iphone XR", "Black", 256,
                 BigDecimal.valueOf(599.99));
+        smartphoneEditDto = new SmartphoneEditDto(null, null, null, null, BigDecimal.valueOf(1099.99));
     }
 
     @Test
@@ -120,5 +124,19 @@ class SmartphoneControllerTest {
                 .andExpect(status().isCreated());
 
         verify(smartphoneService, times(1)).create(smartphoneCreateDto);
+    }
+
+    @Test
+    public void update_correctRequest() throws Exception {
+        String requestBody = objectMapper.writeValueAsString(smartphoneEditDto);
+
+        when(smartphoneService.update(1, smartphoneEditDto)).thenReturn(Optional.of(smartphoneReadDto));
+
+        mockMvc.perform((MockMvcRequestBuilders.put(BASE_URI + "/{id}", 1))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody))
+                .andExpect(status().isOk());
+
+        verify(smartphoneService, times(1)).update(1, smartphoneEditDto);
     }
 }
