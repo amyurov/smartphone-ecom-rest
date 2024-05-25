@@ -67,4 +67,9 @@ public class SmartphoneController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
+        return smartphoneService.delete(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+
 }

@@ -40,4 +40,8 @@ public class SmartphoneService {
     public Optional<SmartphoneReadDto> update(Integer id, SmartphoneEditDto smartphone) {
         return Optional.empty();
     }
+
+    public boolean delete(Integer id) {
+        return false;
+    }
 }
