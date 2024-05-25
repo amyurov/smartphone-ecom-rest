@@ -1,6 +1,7 @@
 package com.amyurov.smartphoneecom.service;
 
 import com.amyurov.smartphoneecom.dto.SmartphoneCreateDto;
+import com.amyurov.smartphoneecom.dto.SmartphoneEditDto;
 import com.amyurov.smartphoneecom.dto.SmartphoneReadDto;
 import com.amyurov.smartphoneecom.repository.SmartphoneRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,10 @@ public class SmartphoneService {
     }
 
     public Optional<SmartphoneReadDto> create(SmartphoneCreateDto smartphone) {
+        return Optional.empty();
+    }
+
+    public Optional<SmartphoneReadDto> update(Integer id, SmartphoneEditDto smartphone) {
         return Optional.empty();
     }
 }

@@ -1,6 +1,7 @@
 package com.amyurov.smartphoneecom.controller;
 
 import com.amyurov.smartphoneecom.dto.SmartphoneCreateDto;
+import com.amyurov.smartphoneecom.dto.SmartphoneEditDto;
 import com.amyurov.smartphoneecom.dto.SmartphoneReadDto;
 import com.amyurov.smartphoneecom.response.ContentResponse;
 import com.amyurov.smartphoneecom.response.PaginatedContentResponse;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -57,6 +59,12 @@ public class SmartphoneController {
         return ResponseEntity.created(createdUri).body(smartphoneReadDto);
     }
 
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> update (@PathVariable Integer id, @RequestBody @Validated SmartphoneEditDto smartphone) {
+        smartphoneService.update(id, smartphone)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_MODIFIED));
 
+        return ResponseEntity.ok().build();
+    }
 
 }
