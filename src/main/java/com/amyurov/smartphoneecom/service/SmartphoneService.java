@@ -20,9 +20,12 @@ import java.util.Optional;
 public class SmartphoneService {
 
     private final SmartphoneRepository smartphoneRepository;
+    private final ModelMapper modelMapper;
 
     public List<SmartphoneReadDto> findAll() {
-        return Collections.emptyList();
+        return smartphoneRepository.findAll().stream()
+                .map(i -> modelMapper.map(i, SmartphoneReadDto.class))
+                .toList();
     }
 
     public Page<SmartphoneReadDto> findAllPaginated(Pageable pageable) {
