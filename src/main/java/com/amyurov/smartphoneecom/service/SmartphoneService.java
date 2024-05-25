@@ -40,6 +40,7 @@ public class SmartphoneService {
                 .map(i -> modelMapper.map(i, SmartphoneReadDto.class));
     }
 
+    @Transactional
     public Optional<SmartphoneReadDto> create(SmartphoneCreateDto smartphone) {
         return Optional.of(smartphone)
                 .map(i -> modelMapper.map(i, Smartphone.class))
@@ -47,6 +48,7 @@ public class SmartphoneService {
                 .map(i -> modelMapper.map(i, SmartphoneReadDto.class));
     }
 
+    @Transactional
     public Optional<SmartphoneReadDto> update(Integer id, SmartphoneEditDto dto) {
         var smartphone = smartphoneRepository.findById(id);
         modelMapper.map(dto, smartphone);
@@ -55,6 +57,7 @@ public class SmartphoneService {
                 .map(i -> modelMapper.map(i, SmartphoneReadDto.class));
     }
 
+    @Transactional
     public boolean delete(Integer id) {
         return smartphoneRepository.findById(id)
                 .map(i -> {
