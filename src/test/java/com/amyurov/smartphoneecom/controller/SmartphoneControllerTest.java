@@ -1,8 +1,10 @@
 package com.amyurov.smartphoneecom.controller;
 
+import com.amyurov.smartphoneecom.dto.SmartphoneCreateDto;
 import com.amyurov.smartphoneecom.dto.SmartphoneReadDto;
 import com.amyurov.smartphoneecom.entity.enums.Manufacturer;
 import com.amyurov.smartphoneecom.service.SmartphoneService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -21,6 +24,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,11 +39,18 @@ class SmartphoneControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     private static SmartphoneReadDto smartphoneReadDto;
+    private static SmartphoneCreateDto smartphoneCreateDto;
+
 
     @BeforeAll()
     public static void setup() {
         smartphoneReadDto = new SmartphoneReadDto(1, Manufacturer.APPLE, "Iphone XR", "Black", 256,
+                BigDecimal.valueOf(599.99));
+        smartphoneCreateDto = new SmartphoneCreateDto(Manufacturer.APPLE, "Iphone XR", "Black", 256,
                 BigDecimal.valueOf(599.99));
     }
 
@@ -95,5 +106,19 @@ class SmartphoneControllerTest {
                 .andExpect(jsonPath("$.title", is("Not Found")));
 
         verify(smartphoneService, times(1)).findById(1);
+    }
+
+    @Test
+    public void create_correctRequest() throws Exception {
+        String requestBody = objectMapper.writeValueAsString(smartphoneCreateDto);
+
+        when(smartphoneService.create(smartphoneCreateDto)).thenReturn(Optional.of(smartphoneReadDto));
+
+        mockMvc.perform(post(BASE_URI)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody))
+                .andExpect(status().isCreated());
+
+        verify(smartphoneService, times(1)).create(smartphoneCreateDto);
     }
 }
