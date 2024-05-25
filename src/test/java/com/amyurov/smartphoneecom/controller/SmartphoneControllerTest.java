@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -69,5 +70,30 @@ class SmartphoneControllerTest {
                 .andExpect(jsonPath("$.content", hasSize(1)));
 
         verify(smartphoneService, times(1)).findAllPaginated(pageRequest);
+    }
+
+    @Test
+    public void findById_correctRequest() throws Exception {
+        when(smartphoneService.findById(1)).thenReturn(Optional.of(smartphoneReadDto));
+
+        mockMvc.perform(get(BASE_URI + "/{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(1)))
+                .andExpect(jsonPath("$.content[0].id", is(1)))
+                .andExpect(jsonPath("$.content[0].manufacturer", is("Apple")));
+
+        verify(smartphoneService, times(1)).findById(1);
+    }
+
+    @Test
+    public void findById_notFound() throws Exception {
+        when(smartphoneService.findById(1)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get(BASE_URI + "/{id}", 1))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status", is(404)))
+                .andExpect(jsonPath("$.title", is("Not Found")));
+
+        verify(smartphoneService, times(1)).findById(1);
     }
 }
