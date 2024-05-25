@@ -47,11 +47,19 @@ public class SmartphoneService {
                 .map(i -> modelMapper.map(i, SmartphoneReadDto.class));
     }
 
-    public Optional<SmartphoneReadDto> update(Integer id, SmartphoneEditDto smartphone) {
-        return Optional.empty();
+    public Optional<SmartphoneReadDto> update(Integer id, SmartphoneEditDto dto) {
+        var smartphone = smartphoneRepository.findById(id);
+        modelMapper.map(dto, smartphone);
+        return smartphone
+                .map(smartphoneRepository::saveAndFlush)
+                .map(i -> modelMapper.map(i, SmartphoneReadDto.class));
     }
 
     public boolean delete(Integer id) {
-        return false;
+        return smartphoneRepository.findById(id)
+                .map(i -> {
+                    smartphoneRepository.delete(i);
+                    return true;
+                }).orElse(false);
     }
 }
