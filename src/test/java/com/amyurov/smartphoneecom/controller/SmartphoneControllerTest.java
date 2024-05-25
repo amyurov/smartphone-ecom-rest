@@ -139,4 +139,18 @@ class SmartphoneControllerTest {
 
         verify(smartphoneService, times(1)).update(1, smartphoneEditDto);
     }
+
+    @Test
+    public void delete_correctRequest() throws Exception {
+        String requestBody = objectMapper.writeValueAsString(smartphoneEditDto);
+
+        when(smartphoneService.delete(1)).thenReturn(true);
+
+        mockMvc.perform((MockMvcRequestBuilders.delete(BASE_URI + "/{id}", 1))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(requestBody))
+                .andExpect(status().isNoContent());
+
+        verify(smartphoneService, times(1)).delete(1);
+    }
 }
