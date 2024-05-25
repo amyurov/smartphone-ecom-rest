@@ -3,6 +3,7 @@ package com.amyurov.smartphoneecom.service;
 import com.amyurov.smartphoneecom.dto.SmartphoneCreateDto;
 import com.amyurov.smartphoneecom.dto.SmartphoneEditDto;
 import com.amyurov.smartphoneecom.dto.SmartphoneReadDto;
+import com.amyurov.smartphoneecom.entity.Smartphone;
 import com.amyurov.smartphoneecom.repository.SmartphoneRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -30,15 +31,20 @@ public class SmartphoneService {
     }
 
     public Page<SmartphoneReadDto> findAllPaginated(Pageable pageable) {
-        return null;
+        return smartphoneRepository.findAll(pageable)
+                .map(i -> modelMapper.map(i, SmartphoneReadDto.class));
     }
 
     public Optional<SmartphoneReadDto> findById(Integer id) {
-        return Optional.empty();
+        return smartphoneRepository.findById(id)
+                .map(i -> modelMapper.map(i, SmartphoneReadDto.class));
     }
 
     public Optional<SmartphoneReadDto> create(SmartphoneCreateDto smartphone) {
-        return Optional.empty();
+        return Optional.of(smartphone)
+                .map(i -> modelMapper.map(i, Smartphone.class))
+                .map(smartphoneRepository::save)
+                .map(i -> modelMapper.map(i, SmartphoneReadDto.class));
     }
 
     public Optional<SmartphoneReadDto> update(Integer id, SmartphoneEditDto smartphone) {
