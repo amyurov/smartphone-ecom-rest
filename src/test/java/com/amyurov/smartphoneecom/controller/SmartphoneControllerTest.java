@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -50,5 +53,21 @@ class SmartphoneControllerTest {
                 .andExpect(jsonPath("$.content[0].manufacturer", is("Apple")));
 
         verify(smartphoneService, times(1)).findAll();
+    }
+
+    @Test
+    public void findAll_correctPageableRequest() throws Exception {
+        var pageRequest = PageRequest.of(0, 1, Sort.by("price"));
+        when(smartphoneService.findAllPaginated(pageRequest)).thenReturn(
+                new PageImpl<>(List.of(smartphoneReadDto), pageRequest, 1L));
+        mockMvc.perform(get(BASE_URI + "?size={size}&sort={sort}", 1, "price"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.metaData").exists())
+                .andExpect(jsonPath("$.metaData.size", is(1)))
+                .andExpect(jsonPath("$.metaData.page", is(0)))
+                .andExpect(jsonPath("$.metaData.sort", is("price: ASC")))
+                .andExpect(jsonPath("$.content", hasSize(1)));
+
+        verify(smartphoneService, times(1)).findAllPaginated(pageRequest);
     }
 }
